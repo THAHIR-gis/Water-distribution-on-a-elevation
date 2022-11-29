@@ -1,0 +1,34 @@
+
+
+
+
+
+var slope=ee.Terrain.slope(srtm);
+
+Map.addLayer(srtm,{min:0,max:3000},'srtm');
+Map.addLayer(
+  water,
+{bands:'occurrence',min:0,max:100,palette:"lightblue,blue"},
+  'water'
+  );
+  //statistics for an area
+  var slopeDict=slope.reduceRegion({
+    reducer:ee.Reducer.mean(),
+    geometry:geometry,
+    scale:30
+  });
+  print('slopeDict',slopeDict);
+  
+  var waterDict=water.select('occurrence').gt(90)
+  .multiply(ee.Image.pixelArea())
+  .reduceRegion({
+    reducer:ee.Reducer.sum(),
+    geometry:geometry,
+    scale:30
+  });
+  print('waterDict',waterDict);
+  
+  
+  
+  
+  
